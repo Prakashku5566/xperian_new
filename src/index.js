@@ -77,6 +77,6 @@ app.use((req, res) => {
   err.status = 404;
   return res.status(404).send({ status: "404 ", msg: "Path not found" });
 });
-app.listen(3001, () => {
+app.listen(process.env.PORT, () => {
   console.log(`Server running on port 3001`);
 });
