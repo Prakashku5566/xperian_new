@@ -32,6 +32,9 @@ app.use("/", comrouter);
 app.use("/", candidateRouter);
 app.use("/", candidateHistoryRouter);
 
+app.use("/", (req, res) => {
+  res.status(200).send("okkkkkk");
+});
 // Endpoint to get states of a specific country
 // app.get("/countries", (req, res) => {
 //   const countries = countryStateCity
@@ -71,6 +74,13 @@ app.use("/", candidateHistoryRouter);
 
 //   res.json(cities);
 // });
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Methods", "GET, POST,PATCH, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.header("Access-Control-Allow-Credentials", true);
+  next();
+});
 
 app.use((req, res) => {
   var err = new Error("Not Found");
@@ -78,5 +88,5 @@ app.use((req, res) => {
   return res.status(404).send({ status: "404 ", msg: "Path not found" });
 });
 app.listen(process.env.PORT, () => {
-  console.log(`Server running on port 3001`);
+  console.log(`Server running on port ${process.env.PORT}`);
 });
