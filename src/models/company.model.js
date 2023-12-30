@@ -13,15 +13,13 @@ const CompanySchema = new mongoose.Schema(
     location: {
       type: String,
       required: true,
-     
     },
     gpsLocation: {
       type: String,
-      required: true,
+      // required: true,
     },
     websiteURL: {
       type: String,
-      required: true,
     },
     email: {
       type: String,
@@ -31,13 +29,12 @@ const CompanySchema = new mongoose.Schema(
     ownerName: {
       type: String,
       required: true,
-      
     },
     ownerNumber: {
       type: Number,
       required: true,
     },
-    gst: {
+    gstIn: {
       type: String,
       required: true,
       unique: true,
@@ -52,11 +49,9 @@ const CompanySchema = new mongoose.Schema(
     },
     opsManager: {
       type: String,
-      
     },
-    opsContact: {
-      type: String,
-      
+    opsContactNo: {
+      type: Number,
     },
     payOut: {
       type: String,
@@ -70,11 +65,12 @@ const CompanySchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    internationalBpo: {
+    typeOfBpo: {
       type: String,
+      enum: ["International", "Domestic"],
       required: true,
     },
-    sift1: {
+    shift1: {
       type: String,
       required: true,
     },
@@ -96,32 +92,25 @@ const CompanySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    Address: {
-      type: String,
-      required: true,
-    },
+
     callProcess: {
       type: String,
-      enum:[ 
+      enum: [
         "Meta/English",
         "PPC/English",
         "Meta/Spanish",
         "PPC/Spanish",
         "bilingual",
+        "French",
       ],
       required: true,
     },
-    // shiftTiming: {
-    //   type: String,
-    //   required: true,
-    // },
     workingDays: {
-      type: Number,
+      type: String,
       required: true,
     },
-    // TODO :ADD Boolean here
     weeklyOff: {
-      type: Number,
+      type: String,
       required: true,
     },
     otherCities: {
@@ -131,47 +120,35 @@ const CompanySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-  
+
     cab: {
       type: String,
-      enum: [
-       "yes",
-       "no",
-       "included",
-       "depends on route"
-      ],
+      enum: ["Yes", "No", "Included", "Depends on route"],
       required: true,
     },
-  
+
     meals: {
       type: String,
-      enum: [
-       "yes",
-       "no",
-       "included"
-      ],
+      enum: ["Yes", "No", "Included"],
       required: true,
     },
-    
+
     interviewProcess: {
       type: String,
-      enum: [
-       "face to face",
-       "telephonic"
-      ],
+      enum: ["Face to face", "Telephonic", "Telephonic and Face to face Both"],
       required: true,
     },
     interviewTiming: {
-      type:String,
+      type: String,
       required: true,
     },
     isDeleted: {
-      type:Boolean, 
-      default: false
+      type: Boolean,
+      default: false,
     },
     deletedAt: {
-      type:Date
-    }, 
+      type: Date,
+    },
   },
   { timestamps: true }
 );

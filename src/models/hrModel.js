@@ -1,11 +1,15 @@
 import mongoose from "mongoose";
 const HrSchema = new mongoose.Schema(
   {
-    name: {
+    fname: {
       type: String,
       required: true,
     },
-   
+    lname: {
+      type: String,
+      required: true,
+    },
+
     Alias: {
       type: String,
       required: true,
@@ -26,12 +30,11 @@ const HrSchema = new mongoose.Schema(
     },
     phoneB: {
       type: Number,
-      required: true,
-      unique: true,
+      // required: true,
+      // unique: true,
     },
     email: {
       type: String,
-      required: true,
       unique: true,
     },
     doj: {
@@ -44,12 +47,9 @@ const HrSchema = new mongoose.Schema(
     },
     confirmedEmployee: {
       type: String,
-      enum:[
-        "Yes",
-        "No",
-      ],
-      default:"No",
-     required: true,
+      enum: ["Yes", "No"],
+      default: "No",
+      // required: true,
     },
     tenure: {
       type: Number,
@@ -67,28 +67,28 @@ const HrSchema = new mongoose.Schema(
         "Business development executive",
         "AccountExecutive",
         "MIS executive",
-       ],
+      ],
       required: true,
     },
     profileExperience: {
       type: String,
-      enum:[
-        "Fresher",
-        "Experienced"
-      ],
+      enum: ["Fresher", "Experienced"],
       required: true,
     },
     coach: {
       type: String,
-    
+      enum: ["Yes", "No"],
+      default: "No",
     },
     teamLeader: {
       type: String,
-  
+      enum: ["Yes", "No"],
+      default: "No",
     },
     manager: {
       type: String,
-    
+      enum: ["Yes", "No"],
+      default: "No",
     },
     shift: {
       type: String,
@@ -98,36 +98,24 @@ const HrSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    bdmBonus: {
-      type: String,
-      required: true,
-    },
-    bdmAddDate:{
-      type: Date,
-      required: true,
-    },
-    msjTarget: {
+    joiningCount: {
       type: Number,
-    
+      default: 0,
     },
-    actualMsj: {
+    selectedCount: {
       type: Number,
+      default: 0,
+    },
+    bdmBonus: [String],
+    bdmAddDate: Date,
 
-    },
-    mtjTarget: {
-      type: Number,
-  
-    },
-    activeMtj: {
-      type: Number,
-  
-    },
-    referredBy: {
-      type: String,
-
-    },
+    msjTarget: Number,
+    actualMsj: Number,
+    mtjTarget: Number,
+    activeMtj: Number,
+    referredBy: String,
     salaryBracket: {
-      type:Number,
+      type: Number,
       required: true,
     },
     password: {
@@ -135,16 +123,14 @@ const HrSchema = new mongoose.Schema(
       required: true,
     },
     isDeleted: {
-      type:Boolean, 
-      default: false
+      type: Boolean,
+      default: false,
     },
     deletedAt: {
-      type:Date
-    }, 
-
+      type: Date,
+    },
   },
   { timestamps: true }
 );
 
-const hrModel = mongoose.model("Hr", HrSchema);
-export default hrModel;
+export default mongoose.model("Hr", HrSchema);

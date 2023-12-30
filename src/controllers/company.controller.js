@@ -1,26 +1,45 @@
 import companyModel from "../models/company.model.js";
 import mongoose from "mongoose";
+import { isvalidAddress, isvalidLanguage, isvalidCompanyName, isvalidLocation, isvalidName, isvalidPhone, isvalidGstIn, isvalidEmail, isvalidTypeBpo, isvalidNumWord, isvalidcallProcess, isvalidCab, isvalidMeals, isvalidInterviewProcess, isvalidShiftTime,isvalidSalaryBracket } from "../validator/validator.js";
 
 //==============================createUser=====================================//
 
 const createCompany = async (req, res) => {
   try {
     let {
-      name,
-      phone,
+      companyName,
+      address,
+      location,
+      gpsLocation,
+      websiteURL,
       email,
+      ownerName,
+      ownerNumber,
+      gstIn,
       hrName,
       hrNumber,
+      opsManager,
+      opsContactNo,
+      payOut,
+      seatingCapacity,
+      currentHeadcount,
+      typeOfBpo,
+      shift1,
+      // sift2,
+      // sift3,
+      companyAging,
+      lockinPeriod,
       HiringRequierments,
-      Address,
       callProcess,
-      siftTiming,
+      shiftTiming,
       workingDays,
       weeklyOff,
+      otherCities,
+      salaryBracket,
       cab,
       meals,
       interviewProcess,
-      interviewTiming,
+      interviewTiming
     } = req.body;
 
     if (Object.keys(req.body).length == 0) {
@@ -29,40 +48,91 @@ const createCompany = async (req, res) => {
         .send({ status: false, msg: "for registration user data is required" });
     }
 
-    if (!name) {
-      return res.status(400).send({ status: false, msg: "Enter your  Name" });
+    if (!companyName) {
+      return res.status(400).send({ status: false, msg: "Enter your  companyName" });
     }
 
-    if (!/^[a-zA-Z]{2,}(?: [a-zA-Z]+){0,2}$/.test(name)) {
+    if (isvalidCompanyName(companyName)) {
       return res
         .status(400)
-        .send({ status: false, msg: "Please enter a valid Name" });
+        .send({ status: false, msg: "Please enter a valid companyName" });
     }
-
-    if (!phone) {
+    if (!address) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Please enter Address for registartion" });
+    }
+    if (isvalidAddress(address)) {
       return res
         .status(400)
         .send({
           status: false,
-          msg: "Enter company contact Number. Its mandatory",
+          msg: "please Enter valid Address",
         });
     }
-    if (!/^[\s]*[6-9]\d{9}[\s]*$/.test(phone)) {
+    if (!location) {
+      return res.status(400).send({ status: false, msg: "Enter the location" });
+    }
+    if (isvalidLocation(location)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Please enter a valid location" });
+    }
+    // if (gpsLocation) {
+    //   return res.status(400).send({ status: false, msg: "Enter the gpsLocation" });
+    // }
+    // if (!websiteURL) {
+    //   return res.status(400).send({ status: false, msg: "Enter the websiteURL" });
+    // }
+    if (!ownerName) {
+      return res.status(400).send({ status: false, msg: "Enter your  ownerName" });
+    }
+    if (isvalidName(ownerName)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Please enter a valid ownerName" });
+    }
+    if (!ownerNumber) {
+      return res
+        .status(400)
+        .send({
+          status: false,
+          msg: "Enter company ownerNumber. Its mandatory",
+        });
+    }
+    if (isvalidPhone(ownerNumber)) {
       return res
         .status(400)
         .send({ status: false, msg: "Please Enter valid phone Number" });
     }
-
-    let existphone = await companyModel.findOne({ phone: phone });
+    let existphone = await companyModel.findOne({ ownerNumber: ownerNumber });
     if (existphone) {
       return res
         .status(400)
         .send({
           status: false,
-          msg: "Company with this phone number is already registered.",
+          msg: "Company with this phone Number is already registered.",
         });
     }
-
+    // if (gstIn) {
+    //   return res
+    //     .status(400)
+    //     .send({ status: false, msg: "Enter gstIn Number" });
+    // }
+    if (isvalidGstIn(gstIn)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Please Enter valid gst number" });
+    }
+    let existgstIn = await companyModel.findOne({ gstIn: gstIn });
+    if (existgstIn) {
+      return res
+        .status(400)
+        .send({
+          status: false,
+          msg: "Company with this gst Number is already registered.",
+        });
+    }
     if (!email) {
       return res
         .status(400)
@@ -71,12 +141,11 @@ const createCompany = async (req, res) => {
           msg: "Enter your email .Its mandatory for registration!!!",
         });
     }
-    if (!/^[a-z0-9_]{1,}@[a-z]{3,10}[.]{1}[a-z]{3}$/.test(email)) {
+    if (isvalidEmail(email)) {
       return res
         .status(400)
         .send({ status: false, msg: "Please Enter valid Email" });
     }
-
     let existEmail = await companyModel.findOne({ email: email });
     if (existEmail) {
       return res
@@ -86,13 +155,14 @@ const createCompany = async (req, res) => {
           msg: "Company with this email is already registered",
         });
     }
+
     if (!hrName) {
       return res
         .status(400)
         .send({ status: false, msg: "Please enter the Hr name" });
     }
 
-    if (!/^[a-zA-Z]{2,}(?: [a-zA-Z]+){0,2}$/.test(hrName)) {
+    if (isvalidName(hrName)) {
       return res
         .status(400)
         .send({ status: false, msg: "please Enter valid Name" });
@@ -102,37 +172,128 @@ const createCompany = async (req, res) => {
         .status(400)
         .send({ status: false, msg: "Enter hr phone Number. Its mandatory" });
     }
-    if (!/^[\s]*[6-9]\d{9}[\s]*$/.test(hrNumber)) {
+    if (isvalidPhone(hrNumber)) {
       return res
         .status(400)
         .send({ status: false, msg: "Please Enter valid phone Number" });
     }
+    // if (opsManager) {
+    //   return res
+    //     .status(400)
+    //     .send({ status: false, msg: "Please enter the opsManager name" });
+    // }
+
+    if (isvalidName(opsManager)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "please Enter valid Name" });
+    }
+    // if (opsContactNo) {
+    //   return res
+    //     .status(400)
+    //     .send({ status: false, msg: "Enter opsContactNo phone Number" });
+    // }
+    if (isvalidPhone(opsContactNo)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Please Enter valid phone Number" });
+    }
+
+    if (!payOut) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Add the payOut" });
+    }
+    if (isvalidSalaryBracket(payOut)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Please Enter valid payment" });
+    }
+    if (!seatingCapacity) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Add the seatingCapacity" });
+    }
+    if (!currentHeadcount) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Add the currentHeadcount" });
+    }
+    if (!typeOfBpo) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Add the type of internationalBpo" });
+    }
+    if (isvalidTypeBpo(typeOfBpo)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "please Enter valid typeOfBpo" });
+    }
+    if (!shift1) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Add the shift time" });
+    }
+    if (isvalidLanguage(shift1)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "please Enter valid sift" });
+    }
+    if (!companyAging) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Add the company Age" });
+    }
+    if (isvalidNumWord(companyAging)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "please Enter valid age of the company" });
+    }
+    if (!lockinPeriod) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Add the lockinPeriod of this company" });
+    }
+    if (isvalidNumWord(lockinPeriod)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "please Enter valid lockin period of this company" });
+    }
+
     if (!HiringRequierments) {
       return res
         .status(400)
         .send({ status: false, msg: "Add the HiringRequierments" });
     }
-
-    //  if (!(/^[a-zA-Z]{2,}(?: [a-zA-Z]+){0,2}$/).test(HiringRequierments)) {
-    //     return res.status(400).send({ status: false, msg: "Please enter a valid Name" })
-    // }
-    if (!Address) {
-      return res.status(400).send({ status: false, msg: "Add the Address" });
+    if (isvalidLanguage(HiringRequierments)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "please Enter valid Hiring Requierments" });
     }
+
+    // if (otherCities) {
+    //   return res.status(400).send({ status: false, msg: "Add if the company loacted in other cities " });
+    // }
+    if (isvalidLocation(otherCities)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "please Enter valid  other company loaction" });
+    }
+    if (!salaryBracket) {
+      return res.status(400).send({ status: false, msg: "Add the Salary Bracket" });
+    }
+    if (isvalidSalaryBracket(salaryBracket)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "please Enter valid salaryBracket" });
+    }
+
     if (!callProcess) {
       return res
         .status(400)
         .send({ status: false, msg: "Enter the callProcess" });
     }
-    if (
-      ![
-        "Meta/English",
-        "PPC/English",
-        "Meta/Spanish",
-        "PPC/Spanish",
-        "bilingual"
-      ].includes(callProcess)
-    ) {
+    if (!isvalidcallProcess(callProcess)) {
       return res
         .status(400)
         .send({
@@ -141,20 +302,36 @@ const createCompany = async (req, res) => {
         });
     }
 
-    // if (!siftTiming) {
-    //   return res
-    //     .status(400)
-    //     .send({ status: false, msg: "Please mentioned the siftTiming" });
-    // }
+    if (!shiftTiming) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Please mentioned the shiftTiming" });
+    }
+    if (isvalidShiftTime(shiftTiming)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "please Enter valid shiftTiming of this company" });
+    }
     if (!workingDays) {
       return res
         .status(400)
         .send({ status: false, msg: "Please mentioned the workingDays" });
     }
+    if (isvalidNumWord(workingDays)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "please Enter valid workingDays of this company" });
+    }
+
     if (!weeklyOff) {
       return res
         .status(400)
         .send({ status: false, msg: "Please mentioned the weekOFFs" });
+    }
+    if (isvalidNumWord(weeklyOff)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "please Enter valid weeklyOff of this company" });
     }
     if (!cab) {
       return res
@@ -164,13 +341,7 @@ const createCompany = async (req, res) => {
           msg: "please mentioned there is cab available or not",
         });
     }
-    if (
-      ![ "yes",
-          "no",
-          "included",
-          "depends on route"
-      ].includes(cab)
-    ) {
+    if (!isvalidCab(cab)) {
       return res
         .status(400)
         .send({
@@ -186,12 +357,7 @@ const createCompany = async (req, res) => {
           msg: "please mentioned there is meals available or not",
         });
     }
-    if (
-      ![ "yes",
-          "no",
-          "included"
-      ].includes(meals)
-    ) {
+    if (!isvalidMeals(meals)) {
       return res
         .status(400)
         .send({
@@ -204,11 +370,7 @@ const createCompany = async (req, res) => {
         .status(400)
         .send({ status: false, msg: "Please mentioned the interviewProcess" });
     }
-    if (
-      ![ "face to face",
-           "telephonic"
-      ].includes(interviewProcess)
-    ) {
+    if (!isvalidInterviewProcess(interviewProcess)) {
       return res
         .status(400)
         .send({
@@ -220,6 +382,11 @@ const createCompany = async (req, res) => {
       return res
         .status(400)
         .send({ status: false, msg: "Please mentioned the interviewTiming" });
+    }
+    if (isvalidShiftTime(interviewTiming)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "please Enter valid interviewTiming of this company" });
     }
     let savedData = await companyModel.create(req.body);
     return res
@@ -233,38 +400,44 @@ const createCompany = async (req, res) => {
 
 const getCompanyByquery = async (req, res) => {
   try {
-      const filter = { isDeleted: false }
+    const filter = { isDeleted: false }
 
-      const queryParams = req.query
-      {
-          const {companyId, name,Address } = queryParams
-          if (companyId) {
-              if (!mongoose.Types.ObjectId.isValid(companyId)) {
-                  return res.status(400).send({ status: false, msg: `please enter a valid companyId` })
-              }
-              filter["companyId"] = companyId
-          }
-
-          if (name) {
-              filter['name'] = name
-          }
-
-          if (Address) {
-              filter['Address'] =Address
-         }
+    const queryParams = req.query
+    {
+      const { companyId, companyName, address, location, callProcess } = queryParams
+      if (companyId) {
+        if (!mongoose.Types.ObjectId.isValid(companyId)) {
+          return res.status(400).send({ status: false, msg: `please enter a valid companyId` })
+        }
+        filter["companyId"] = companyId
       }
-      
-      const company = await companyModel.find(filter)  //.select({  hrId: 1,name:1, username: 1, phone: 1}).collation({ locale: "en" }).sort({ name: 1 })
 
-      if (Object.keys(company).length == 0)
+      if (name) {
+        filter['companyName'] = companyName
+      }
+
+      if (address) {
+        filter['address'] = address
+      }
+      if (callProcess) {
+        filter['callProcess'] = callProcess
+      }
+      if (location) {
+        filter['location'] = location
+      }
+    }
+
+    const company = await companyModel.find(filter)  //.select({  hrId: 1,name:1, username: 1, phone: 1}).collation({ locale: "en" }).sort({ name: 1 })
+
+    if (Object.keys(company).length == 0)
       return res.status(404).send({ status: false, msg: "No Such company is found" })
 
-     return res.status(200).send({ status: true, message: 'company list', data:company })
+    return res.status(200).send({ status: true, message: 'company list', data: company })
 
   }
   catch (err) {
-      // console.log(err.message)
-      res.status(500).send({ status: false, Error: err.message })
+    // console.log(err.message)
+    res.status(500).send({ status: false, Error: err.message })
   }
 }
 
@@ -272,214 +445,395 @@ const getCompanyByquery = async (req, res) => {
 
 const updateCompany = async (req, res) => {
   try {
-      let companyId = req.params.companyId
-      let {
-        name,
-        phone,
-        email,
-        hrName,
-        hrNumber,
-        HiringRequierments,
-        Address,
-        callProcess,
-        siftTiming,
-        workingDays,
-        weeklyOff,
-        cab,
-        meals,
-        interviewProcess,
-        interviewTiming,
-      } = req.body;
-      if (Object.keys(req.body).length == 0)
-          return res.status(400).send({ status: false, msg: "Please Enter Details For Updating" })
+    let companyId = req.params.companyId
+    let {
+      companyName,
+      address,
+      location,
+      gpsLocation,
+      websiteURL,
+      email,
+      ownerName,
+      ownerNumber,
+      gstIn,
+      hrName,
+      hrNumber,
+      opsManager,
+      opsContactNo,
+      payOut,
+      seatingCapacity,
+      currentHeadcount,
+      typeOfBpo,
+      shift1,
+      // sift2,
+      // sift3,
+      companyAging,
+      lockinPeriod,
+      HiringRequierments,
+      callProcess,
+      shiftTiming,
+      workingDays,
+      weeklyOff,
+      otherCities,
+      salaryBracket,
+      cab,
+      meals,
+      interviewProcess,
+      interviewTiming
+    } = req.body;
 
-      if (!companyId) {
-          return res.status(400).send({ status: false, msg: "companyId must be present" })
-      }
+    if (Object.keys(req.body).length == 0)
+      return res.status(400).send({ status: false, msg: "Please Enter Details For Updating" })
 
-      if (!mongoose.Types.ObjectId.isValid(companyId)) {
-          return res.status(400).send({ status: false, msg: `this  companyId is not a valid Id` })
-      }
-      let findcompanyId = await companyModel.findById(companyId)
+    if (!companyId) {
+      return res.status(400).send({ status: false, msg: "companyId must be present" })
+    }
 
-      
-      if (!findcompanyId) {
-          return res.status(404).send({ status: false, msg: "no Company found with this company Id" })
-      }
-      if (name) {
-        if(name.trim().length==0) return res.status(400).send({ status: false, msg: "Please enter a valid name" })
-      if (!/^[a-zA-Z]{2,}(?: [a-zA-Z]+){0,2}$/.test(name)) 
+    if (!mongoose.Types.ObjectId.isValid(companyId)) {
+      return res.status(400).send({ status: false, msg: `this  companyId is not a valid Id` })
+    }
+    let findcompanyId = await companyModel.findById(companyId)
+    if (!findcompanyId) {
+      return res.status(404).send({ status: false, msg: "no Company found with this company Id" })
+    }
+    if (companyName) {
+      // if (companyName.trim().length == 0) return
+      // res.status(400).send({ status: false, msg: "Please enter a valid Company name......." })
+      if (isvalidCompanyName(companyName))
         return res
           .status(400)
-          .send({ status: false, msg: "Please enter a valid Name" });
-      }
-     
-  
-      if (phone) {
-        if(phone.trim().length==0) return res.status(400).send({ status: false, msg: "Please enter a valid Number" })
-      if (!/^[\s]*[6-9]\d{9}[\s]*$/.test(phone)) 
+          .send({ status: false, msg: "Please enter a valid Company Name" });
+    }
+    if (address) {
+      if (address.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter a valid Address" })
+      if (isvalidAddress(address))
+        return res
+          .status(400)
+          .send({
+            status: false,
+            msg: "please Enter valid Address",
+          });
+    }
+    if (location) {
+      if (location.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter a valid location" })
+      if (isvalidLocation(location))
+        return res
+          .status(400)
+          .send({ status: false, msg: "Please enter a valid location" });
+
+    }
+    if (ownerName) {
+      if (ownerName.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter a valid ownerName" })
+      if (isvalidName(ownerName))
+        return res
+          .status(400)
+          .send({ status: false, msg: "Please Enter valid ownerName" });
+    }
+    if (ownerNumber) {
+      if (ownerNumber.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter a valid Number" })
+      if (isvalidPhone(ownerNumber))
         return res
           .status(400)
           .send({ status: false, msg: "Please Enter valid phone Number" });
-      }
-      let existphone = await companyModel.findOne({ phone: phone });
-      if (existphone) {
+    }
+    if (gstIn) {
+      if (gstIn.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter a valid gstIn" })
+      if (isvalidGstIn(gstIn))
         return res
           .status(400)
-          .send({
-            status: false,
-            msg: "User with this phone number is already registered.",
-          });
-      }
-  
-      if (email) {
-        if(email.trim().length==0) return res.status(400).send({ status: false, msg: "Please enter a valid email" })
-      if (!/^[a-z0-9_]{1,}@[a-z]{3,10}[.]{1}[a-z]{3}$/.test(email)) 
+          .send({ status: false, msg: "Please Enter valid gstIn Number" });
+    }
+    if (hrName) {
+      if (hrName.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter a valid HrName" })
+      if (isvalidName(hrName))
+        return res
+          .status(400)
+          .send({ status: false, msg: "Please Enter valid HrName" });
+    }
+    if (hrNumber) {
+      if (hrNumber.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter a valid HrNumber" })
+      if (isvalidPhone(hrNumber))
+        return res
+          .status(400)
+          .send({ status: false, msg: "Please Enter valid phone HrNumber" });
+    }
+    if (opsManager) {
+      if (opsManager.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter a valid opsManager Name" })
+      if (!isvalidName(opsManager))
+        return res
+          .status(400)
+          .send({ status: false, msg: "Please Enter valid opsManager Name" });
+    }
+    if (opsContactNo) {
+      if (opsContactNo.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter a valid Number" })
+      if (isvalidPhone(opsContactNo))
+        return res
+          .status(400)
+          .send({ status: false, msg: "Please Enter valid phone Number" });
+    }
+
+    if (payOut) {
+      if (payOut.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter the pay Out" })
+    }
+    if (seatingCapacity) {
+      if (seatingCapacity.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter the seatingCapacity of this company" })
+    }
+    if (currentHeadcount) {
+      if (currentHeadcount.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter the currentHeadcount of this company" })
+    }
+    if (typeOfBpo) {
+      if (typeOfBpo.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter typeOfBpo" })
+      if (isvalidTypeBpo(typeOfBpo))
+        return res
+          .status(400)
+          .send({ status: false, msg: "please Enter valid typeOfBpo" });
+    }
+    if (shift1) {
+      if (shift1.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter the shift of this company" })
+      if (isvalidLanguage(shift1))
+        return res
+          .status(400)
+          .send({ status: false, msg: "please Enter valid sift" });
+
+    }
+    //companyAging,
+    //lockinPeriod,
+    if (companyAging) {
+      if (companyAging.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter the company Age" })
+      if (isvalidNumWord(companyAging))
+        return res
+          .status(400)
+          .send({ status: false, msg: "please Enter valid age of the company" });
+    }
+    if (lockinPeriod) {
+      if (lockinPeriod.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter the company lock in Period" })
+      if (isvalidNumWord(lockinPeriod))
+        return res
+          .status(400)
+          .send({ status: false, msg: "please Enter valid lockin period of this company" });
+    }
+    // let existphone = await companyModel.findOne({ phone: phone });
+    // if (existphone) {
+    //   return res
+    //     .status(400)
+    //     .send({
+    //       status: false,
+    //       msg: "User with this phone number is already registered.",
+    //     });
+    // }
+
+    if (email) {
+      if (email.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter a valid email" })
+      if (isvalidEmail(email))
         return res
           .status(400)
           .send({ status: false, msg: "Please Enter valid Email" });
-      }
-  
-      let existEmail = await companyModel.findOne({ email: email });
-      if (existEmail) {
-        return res
-          .status(400)
-          .send({
-            status: false,
-            msg: "User with this email is already registered",
-          });
-      }
-      if (hrNumber) {
-        if(hrNumber.trim().length==0) return res.status(400).send({ status: false, msg: "Please enter a valid hrNumber" })
-      }
-      if (hrName) {
-        if(hrName.trim().length==0) return res.status(400).send({ status: false, msg: "Please enter a valid hrName" })
-      }
-      if (HiringRequierments) {
-        if(HiringRequierments.trim().length==0) return res.status(400).send({ status: false, msg: "Please enter a valid HiringRequierments" })
-      }
-      if (Address) {
-        if(Address.trim().length==0) return res.status(400).send({ status: false, msg: "Please enter a valid Address" })
-      }
-      if (callProcess) {
-        if(callProcess.trim().length==0) return res.status(400).send({ status: false, msg: "Please enter a valid callProcess" })
+    }
+
+    let existEmail = await companyModel.findOne({ email: email });
+    if (existEmail) {
+      return res
+        .status(400)
+        .send({
+          status: false,
+          msg: "User with this email is already taken",
+        });
+    }
+
+    if (HiringRequierments) {
+      if (HiringRequierments.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter a valid HiringRequierments" })
+        if (isvalidLanguage(HiringRequierments)) {
+          return res
+            .status(400)
+            .send({ status: false, msg: "please Enter valid Hiring Requierments" });
+        }
       
-      if (
-        ![
-          "Meta/English",
-          "PPC/English",
-          "Meta/Spanish",
-          "PPC/Spanish",
-          "bilingual",
-        ].includes(callProcess)
-      ) 
+    }
+       if (callProcess) {
+      if (callProcess.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter a valid callProcess" })
+      if (isvalidcallProcess(callProcess))
         return res
           .status(400)
           .send({
             status: false,
             msg: " callProcess must be type of ['Meta/English','PPC/English','Meta/Spanish','PPC/Spanish','bilingual']",
           });
-      }
-      if (siftTiming) {
-        if(siftTiming.trim().length==0) return res.status(400).send({ status: false, msg: "Please enter  valid siftTiming" })
-      } 
+    }
+    if (shiftTiming) {
+      if (siftTiming.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter  valid shiftTiming" })
+      if (isvalidShiftTime(shiftTiming))
+        return res
+          .status(400)
+          .send({ status: false, msg: "please Enter valid shiftTiming of this company" });
+    }
     if (workingDays) {
-        if(workingDays.trim().length==0) return res.status(400).send({ status: false, msg: "Please enter  valid workingDays" })
-      }
-      if (weeklyOff) {
-        if(weeklyOff.trim().length==0) return res.status(400).send({ status: false, msg: "Please enter a valid weeklyOff" })
-      }
-      if (cab) {
-        if(cab.trim().length==0) return res.status(400).send({ status: false, msg: "Please enter a valid detail" })
-        if (
-        ![ "yes",
-          "no",
-          "included",
-          "depends on route"
-      ].includes(cab)
-        ) 
-      return res
-        .status(400)
-        .send({
-          status: false,
-          msg: " cab must be type of ['yes','no','included','depends on route']",
-        });
-      }
-      if (meals) {
-        if(meals.trim().length==0) return res.status(400).send({ status: false, msg: "Please enter a valid detail" })
-        if (
-          ![ "yes",
-              "no",
-              "included",
-          ].includes(cab)
-        ) 
+      if (workingDays.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter  valid workingDays" })
+      if (isvalidNumWord(workingDays))
+        return res
+          .status(400)
+          .send({ status: false, msg: "please Enter valid workingDays of this company" });
+
+    }
+    if (weeklyOff) {
+      if (weeklyOff.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter a valid weeklyOff" })
+      if (isvalidNumWord(weeklyOff))
+        return res
+          .status(400)
+          .send({ status: false, msg: "please Enter valid weeklyOff of this company" });
+
+    }
+    if (otherCities) {
+      if (otherCities.trim().length == 0)
+        return res.status(400).send({ status: false, msg: "Please enter if this company is located in other cities" })
+        if (isvalidLocation(otherCities)) 
           return res
             .status(400)
-            .send({
-              status: false,
-              msg: " meals must be type of ['yes','no','included']",
-            });
+            .send({ status: false, msg: "please Enter valid  other company loaction" });
+    }
+      if (salaryBracket) {
+        if (salaryBracket.trim().length == 0)
+          return res.status(400).send({ status: false, msg: "Please enter a valid salaryBracket" })
+          if (isvalidSalaryBracket(salaryBracket)) 
+            return res
+              .status(400)
+              .send({ status: false, msg: "please Enter valid salaryBracket" });
+      }
+        if (cab) {
+          if (cab.trim().length == 0)
+            return res.status(400).send({ status: false, msg: "Please enter a valid detail" })
+          if (isvalidCab(cab))
+            return res
+              .status(400)
+              .send({
+                status: false,
+                msg: " cab must be type of ['yes','no','included','depends on route']",
+              });
         }
-      
-      if (interviewProcess) {
-        if(interviewProcess.trim().length==0) return res.status(400).send({ status: false, msg: "Please enter a valid detail" })
-      }
-      if (interviewTiming) {
-        if(interviewTiming.trim().length==0) return res.status(400).send({ status: false, msg: "Please enter a valid interviewTiming" })
-      }
-      if (findcompanyId.isDeleted == true) {
+        if (meals) {
+          if (meals.trim().length == 0) return res.status(400).send({ status: false, msg: "Please enter a valid detail" })
+          if (isvalidMeals(meals))
+            return res
+              .status(400)
+              .send({
+                status: false,
+                msg: " meals must be type of ['yes','no','included']",
+              });
+        }
+
+        if (interviewProcess) {
+          if (interviewProcess.trim().length == 0)
+            return res.status(400).send({ status: false, msg: "Please enter a valid detail" })
+          if (!isvalidInterviewProcess(interviewProcess))
+            return res
+              .status(400)
+              .send({
+                status: false,
+                msg: " interviewProcess must be type of ['face to face' or'telephonic']",
+              });
+        }
+        if (interviewTiming) {
+          if (interviewTiming.trim().length == 0)
+            return res.status(400).send({ status: false, msg: "Please enter a valid interviewTiming" })
+          if (isvalidShiftTime(interviewTiming))
+            return res
+              .status(400)
+              .send({ status: false, msg: "please Enter valid interviewTiming of this company" });
+
+        }
+        if (findcompanyId.isDeleted == true) {
           return res.status(404).send({ status: false, msg: "Company is already deleted" })
-      }
- 
-      let updatedCompany = await companyModel.findOneAndUpdate({ _id:companyId }, {
+        }
+
+        let updatedCompany = await companyModel.findOneAndUpdate({ _id: companyId }, {
           $set: {
-            name:name,
-            phone:phone,
+            companyName:companyName,
+            address:address,
+            location:location,
+            gpsLocation:gpsLocation,
+            websiteURL:websiteURL,
             email:email,
+            ownerName:ownerName,
+            ownerNumber:ownerNumber,
+            gstIn:gstIn,
             hrName:hrName,
             hrNumber:hrNumber,
+            opsManager:opsManager,
+            opsContactNo:opsContactNo,
+            payOut:payOut,
+            seatingCapacity:seatingCapacity,
+            currentHeadcount:currentHeadcount,
+            typeOfBpo:typeOfBpo,
+            shift1:shift1,
+            // sift2,
+            // sift3,
+            companyAging:companyAging,
+            lockinPeriod:lockinPeriod,
             HiringRequierments:HiringRequierments,
-            Address:Address,
             callProcess:callProcess,
-            siftTiming:siftTiming,
+            shiftTiming:shiftTiming,
             workingDays:workingDays,
             weeklyOff:weeklyOff,
+            otherCities:otherCities,
+            salaryBracket:salaryBracket,
             cab:cab,
             meals:meals,
             interviewProcess:interviewProcess,
-            interviewTiming:interviewTiming
+            interviewTiming:interviewTiming,
           },
-      }, { new: true })
+        }, { new: true })
 
 
-      return res.status(200).send({ status: true, message: "Company", data: updatedCompany })
-  }
-  catch (err) {
-      res.status(500).send({ status: false, msg: err.message })
-  }
-};
-
-
-//========================================================deleteBook===================================//
-const DeleteCompany = async function (req, res) {
-  try {
-
-      let companyId = req.params.companyId
-      if (!mongoose.Types.ObjectId.isValid(companyId))
-          return res.status(400).send({ status: false, msg: "please enter valid companyId" })
-      const savedata = await companyModel.findById(companyId)
-      if (savedata.isDeleted == true) {
-          return res.status(404).send({ status: false, message: "company is already removed" })
+        return res.status(200).send({ status: true, message: "Company", data: updatedCompany })
       }
+    
+  catch (err) {
+        res.status(500).send({ status: false, msg: err.message })
+      }
+    };
 
-      const deleteHr = await companyModel.findByIdAndUpdate({ _id: companyId }, { $set: { isDeleted: true, deletedAt: Date.now() } });
-      return res.status(200).send({ status: true, message: "Company has been deleted successfully" })
+
+    //========================================================deleteBook===================================//
+    const DeleteCompany = async function (req, res) {
+      try {
+
+        let companyId = req.params.companyId
+        if (!mongoose.Types.ObjectId.isValid(companyId))
+          return res.status(400).send({ status: false, msg: "please enter valid companyId" })
+        const savedata = await companyModel.findById(companyId)
+        if (savedata.isDeleted == true) {
+          return res.status(404).send({ status: false, message: "company is already removed" })
+        }
+
+        const deleteHr = await companyModel.findByIdAndUpdate({ _id: companyId }, { $set: { isDeleted: true, deletedAt: Date.now() } });
+        return res.status(200).send({ status: true, message: "Company has been deleted successfully" })
 
 
-  } catch (error) {
-      res.status(500).send({ status: false, msg: error.message });
+      } catch (error) {
+        res.status(500).send({ status: false, msg: error.message });
 
-  }
-}
+      }
+    }
 
-export {createCompany,getCompanyByquery,updateCompany,DeleteCompany};
+    export { createCompany, getCompanyByquery, updateCompany, DeleteCompany };

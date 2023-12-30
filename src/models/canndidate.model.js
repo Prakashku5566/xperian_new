@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 const CandidateSchema = new mongoose.Schema(
   {
+    hrId: {
+      type: String,
+      required: true,
+    },
     fname: {
       type: String,
       required: true,
@@ -37,15 +41,13 @@ const CandidateSchema = new mongoose.Schema(
       type: String,
       unique: true,
     },
-    
+    // todo:madhuri
+    // phoneForCalling
     phoneforcalling: {
-      type: Number,
+      type: String,
       required: true,
     },
-    phoneforWp: {
-      type: Number,
-      required: true,
-    },
+    phoneforWp: String,
     experienceCallProcess: {
       type: String,
       required: true,
@@ -56,79 +58,22 @@ const CandidateSchema = new mongoose.Schema(
     },
     profile: {
       type: String,
-      enum: [
-        "Experience",
-         "Fresher"
-        ],
+      enum: ["Experience", "Fresher"],
       required: true,
     },
-    hr: {
-      type: String,
-      required: true,
-    },
-    status: {
-      type: String,
-      enum: [
-       "selected",
-       "Rejected",
-      ],
-      required: true,
-    },
+
     dateOfAdd: {
-      type: Date,
-      required: true,
-    },
-    dateOfSelection: {
-      type: Date,
-      required: true,
-    },
-    livestatus: {
-      type: String,
-      enum: [
-       "joined",
-       "left",
-       "terminated"
-      ],
-      required: true,
-    },
-    dateOfjoining: {
-      type: Date,
-    },
-    dateOfLeft: {
-      type: Date,
-    },
-    dateOfterminated: {
-      type: Date,
-    },
-    companyName: {
       type: String,
       required: true,
     },
-    lockInDate: {
-      type: Date,
-    
-    },
-    hrLocked: {
-      type: String,
-      enum: [
-       "yes",
-       "no",
-      ],
-    },
-    completionOfCompanyLockIn: {
-      type: String,
-      enum: [
-       "yes",
-       "no",
-      ],
-    },
+
     isDeleted: {
-      type:Boolean, 
-      default: false
+      type: Boolean,
+      default: false,
     },
     deletedAt: {
-      type:Date
-    }, 
+      type: Date,
+    },
   },
   { timestamps: true }
 );

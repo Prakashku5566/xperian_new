@@ -1,14 +1,24 @@
-import  express  from "express";
+import express from "express";
 const candidateRouter = express.Router();
-import {createCandidate,getCandidateByquery,updateCandidate,DeleteCandidate} from "../controllers/candidate.controller.js";
+import {
+  createCandidate,
+  getCandidateByquery,
+  updateCandidate,
+  DeleteCandidate,
+} from "../controllers/candidate.controller.js";
+import { hrauthentication, hrauthorisation } from "../middleware/hrAuth.js";
+import { authentication, authorisation } from "../middleware/auth.js";
 
+candidateRouter.post("/api/candidate", hrauthentication, createCandidate);
 
-candidateRouter.post("/api/candidate",createCandidate)
+candidateRouter.get("/api/getcandidate", hrauthentication, getCandidateByquery);
 
-candidateRouter.get("/api/getcandidate",getCandidateByquery);
+candidateRouter.put("/api/updatecandidate/:candidateId", updateCandidate);
 
-candidateRouter.put("/api/updatecandidate/:candidateId",updateCandidate);
-
-candidateRouter.delete("/api/deletecandidate/:candidateId",DeleteCandidate)
+candidateRouter.delete(
+  "/api/deletecandidate/:candidateId",
+  authentication,
+  DeleteCandidate
+);
 
 export default candidateRouter;

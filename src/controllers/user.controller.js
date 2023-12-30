@@ -1,40 +1,44 @@
 
 import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
-
+import {isValidTitle, isvalidEmail, isvalidName, isvalidPhone,isvalidPassword} from "../validator/validator.js"
 //==============================createUser=====================================//
 
 const createUser = async (req, res) => {
   try {
-    let { name, phone, email, password } = req.body;
+    let { fname,lname, phone, email, password, designation } = req.body;
 
     if (Object.keys(req.body).length == 0) {
       return res
         .status(400)
         .send({ status: false, msg: "for registration user data is required" });
     }
-
-    if (!name) {
-      return res.status(400).send({ status: false, msg: "Enter your  Name" });
+    if (!fname) {
+      return res.status(400).send({ status: false, msg: "Enter your first Name" });
     }
-
-    if (!/^[a-zA-Z]{2,}(?: [a-zA-Z]+){0,2}$/.test(name)) {
+    if (isvalidName(fname)) {
       return res
         .status(400)
-        .send({ status: false, msg: "Please enter a valid Name" });
+        .send({ status: false, msg: "Please enter a valid first Name" });
     }
-
+    if (!lname) {
+      return res.status(400).send({ status: false, msg: "Enter your last Name" });
+    }
+    if (isvalidName(lname)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Please enter a valid last Name" });
+    }
     if (!phone) {
       return res
         .status(400)
         .send({ status: false, msg: "Enter your phone Number. Its mandatory" });
     }
-    if (!/^[\s]*[6-9]\d{9}[\s]*$/.test(phone)) {
+    if (isvalidPhone(phone)) {
       return res
         .status(400)
         .send({ status: false, msg: "Please Enter valid phone Number" });
     }
-
     let existphone = await userModel.findOne({ phone: phone });
     if (existphone) {
       return res.status(400).send({
@@ -42,18 +46,29 @@ const createUser = async (req, res) => {
         msg: "User with this phone number is already registered.",
       });
     }
-
     if (!email) {
       return res.status(400).send({
         status: false,
         msg: "Enter your email .Its mandatory for registration!!!",
       });
     }
-    if (!/^[a-z0-9_]{1,}@[a-z]{3,10}[.]{1}[a-z]{3}$/.test(email)) {
+    if (!designation) {
+      return res.status(400).send({
+        status: false,
+        msg: "Enter your designation .Its mandatory for registration!!!",
+      });
+    } 
+    if (isvalidEmail(email)) {
       return res
         .status(400)
         .send({ status: false, msg: "Please Enter valid Email" });
     }
+        if (!isValidTitle(designation)) {
+          return res.status(400).send({
+            status: false,
+            message: "designation should be among Director,Manager",
+          });
+        }
 
     let existEmail = await userModel.findOne({ email: email });
     if (existEmail) {
@@ -68,7 +83,7 @@ const createUser = async (req, res) => {
         .send({ status: false, msg: "Please enter Password for registartion" });
     }
 
-    if (!/^[\s]*[0-9a-zA-Z@#$%^&*]{8,15}[\s]*$/.test(password)) {
+    if (isvalidPassword(password)) {
       return res.status(400).send({
         status: false,
         msg: "please Enter valid Password and it's length should be 8-15",
