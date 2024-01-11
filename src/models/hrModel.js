@@ -1,41 +1,42 @@
 import mongoose from "mongoose";
 const HrSchema = new mongoose.Schema(
   {
-    name: {
+    firstName: {
       type: String,
       required: true,
     },
-   
-    Alias: {
+    lastName: {
       type: String,
       required: true,
-      unique: true,
     },
-    Address: {
+
+    alias_name: {
+      type: String,
+      required: true,
+    },
+    address: {
       type: String,
       required: true,
     },
     WfhLocation: {
       type: String,
-      required: true,
     },
     phoneP: {
-      type: Number,
-      required: true,
-      unique: true,
+      type: String,
+      // required: true,
+      // unique: true,s
     },
     phoneB: {
-      type: Number,
+      type: String,
       required: true,
-      unique: true,
+      // unique: true,s
     },
     email: {
       type: String,
-      required: true,
       unique: true,
     },
     doj: {
-      type: Date,
+      type: String,
       required: true,
     },
     probation: {
@@ -44,15 +45,11 @@ const HrSchema = new mongoose.Schema(
     },
     confirmedEmployee: {
       type: String,
-      enum:[
-        "Yes",
-        "No",
-      ],
-      default:"No",
-     required: true,
+      enum: ["Yes", "No"],
+      default: "No",
     },
     tenure: {
-      type: Number,
+      type: String,
     },
 
     profile: {
@@ -67,28 +64,28 @@ const HrSchema = new mongoose.Schema(
         "Business development executive",
         "AccountExecutive",
         "MIS executive",
-       ],
+      ],
       required: true,
     },
     profileExperience: {
       type: String,
-      enum:[
-        "Fresher",
-        "Experienced"
-      ],
+      enum: ["Fresher", "Experienced"],
       required: true,
     },
     coach: {
       type: String,
-    
+      enum: ["Yes", "No"],
+      default: "No",
     },
     teamLeader: {
       type: String,
-  
+      enum: ["Yes", "No"],
+      default: "No",
     },
     manager: {
       type: String,
-    
+      enum: ["Yes", "No"],
+      default: "No",
     },
     shift: {
       type: String,
@@ -98,36 +95,35 @@ const HrSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    bdmBonus: {
-      type: String,
-      required: true,
-    },
-    bdmAddDate:{
-      type: Date,
-      required: true,
-    },
-    msjTarget: {
-      type: Number,
-    
-    },
-    actualMsj: {
-      type: Number,
+    // bdmBonus: {
+    //   type: String,
+    //   required: true,
+    // },
+    // bdmAddDate: {
+    //   type: String,
+    //   required: true,
+    // },
+    // msjTarget: {
+    //   type: Number,
 
-    },
-    mtjTarget: {
-      type: Number,
-  
-    },
-    activeMtj: {
-      type: Number,
-  
-    },
+    // },
+    // actualMsj: {
+    //   type: Number,
+
+    // },
+    // mtjTarget: {
+    //   type: Number,
+
+    // },
+    // activeMtj: {
+    //   type: Number,
+
+    // },
     referredBy: {
       type: String,
-
     },
     salaryBracket: {
-      type:Number,
+      type: Number,
       required: true,
     },
     password: {
@@ -135,16 +131,14 @@ const HrSchema = new mongoose.Schema(
       required: true,
     },
     isDeleted: {
-      type:Boolean, 
-      default: false
+      type: Boolean,
+      default: false,
     },
     deletedAt: {
-      type:Date
-    }, 
-
+      type: Date,
+    },
   },
   { timestamps: true }
 );
 
-const hrModel = mongoose.model("Hr", HrSchema);
-export default hrModel;
+export default mongoose.model("Hr", HrSchema);

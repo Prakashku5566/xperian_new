@@ -1,11 +1,12 @@
 import mongoose from "mongoose";
 const CandidateSchema = new mongoose.Schema(
   {
-    fname: {
+
+    firstName: {
       type: String,
       required: true,
     },
-    lname: {
+    lastName: {
       type: String,
       required: true,
     },
@@ -27,20 +28,20 @@ const CandidateSchema = new mongoose.Schema(
     },
     preferedLocationB: {
       type: String,
-      required: true,
+      // required: true,
     },
     preferedLocationC: {
       type: String,
-      required: true,
+      // required: true,
     },
     email: {
       type: String,
       unique: true,
     },
-    
+
     phoneforcalling: {
       type: Number,
-      required: true,
+      // required: true,
     },
     phoneforWp: {
       type: Number,
@@ -48,7 +49,7 @@ const CandidateSchema = new mongoose.Schema(
     },
     experienceCallProcess: {
       type: String,
-      required: true,
+      // required: true,
     },
     language: {
       type: String,
@@ -57,78 +58,24 @@ const CandidateSchema = new mongoose.Schema(
     profile: {
       type: String,
       enum: [
-        "Experience",
-         "Fresher"
-        ],
-      required: true,
-    },
-    hr: {
-      type: String,
-      required: true,
-    },
-    status: {
-      type: String,
-      enum: [
-       "selected",
-       "Rejected",
+        "Experienced",
+        "Fresher"
       ],
-      required: true,
+      // required: true,
     },
+
     dateOfAdd: {
-      type: Date,
-      required: true,
-    },
-    dateOfSelection: {
-      type: Date,
-      required: true,
-    },
-    livestatus: {
-      type: String,
-      enum: [
-       "joined",
-       "left",
-       "terminated"
-      ],
-      required: true,
-    },
-    dateOfjoining: {
-      type: Date,
-    },
-    dateOfLeft: {
-      type: Date,
-    },
-    dateOfterminated: {
-      type: Date,
-    },
-    companyName: {
       type: String,
       required: true,
     },
-    lockInDate: {
-      type: Date,
-    
-    },
-    hrLocked: {
-      type: String,
-      enum: [
-       "yes",
-       "no",
-      ],
-    },
-    completionOfCompanyLockIn: {
-      type: String,
-      enum: [
-       "yes",
-       "no",
-      ],
-    },
+
     isDeleted: {
-      type:Boolean, 
+      type: Boolean,
       default: false
     },
     deletedAt: {
-      type:Date
-    }, 
+      type: Date
+    },
   },
   { timestamps: true }
 );

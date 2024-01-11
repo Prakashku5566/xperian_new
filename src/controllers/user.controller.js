@@ -1,24 +1,40 @@
-
 import userModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
-
+import {
+  isValidTitle,
+  isvalidEmail,
+  isvalidName,
+  isvalidPhone,
+  isvalidPassword,
+} from "../validator/validator.js";
 //==============================createUser=====================================//
 
 const createUser = async (req, res) => {
   try {
-    let { name, phone, email, password } = req.body;
+    let { firstName, lastName, phone, email, password, designation } = req.body;
 
     if (Object.keys(req.body).length == 0) {
       return res
         .status(400)
         .send({ status: false, msg: "for registration user data is required" });
     }
-
-    if (!name) {
-      return res.status(400).send({ status: false, msg: "Enter your  Name" });
+    if (!firstName) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Enter your first Name" });
+    }
+    if (isvalidName(firstName)) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Please enter a valid Name" });
     }
 
-    if (!/^[a-zA-Z]{2,}(?: [a-zA-Z]+){0,2}$/.test(name)) {
+    if (!lastName) {
+      return res
+        .status(400)
+        .send({ status: false, msg: "Enter your last Name" });
+    }
+    if (isvalidName(lastName)) {
       return res
         .status(400)
         .send({ status: false, msg: "Please enter a valid Name" });
@@ -27,12 +43,7 @@ const createUser = async (req, res) => {
     if (!phone) {
       return res
         .status(400)
-        .send({ status: false, msg: "Enter your phone Number. Its mandatory" });
-    }
-    if (!/^[\s]*[6-9]\d{9}[\s]*$/.test(phone)) {
-      return res
-        .status(400)
-        .send({ status: false, msg: "Please Enter valid phone Number" });
+        .send({ status: false, msg: "Enter your phone Number.Its mandatory" });
     }
 
     let existphone = await userModel.findOne({ phone: phone });
@@ -42,19 +53,29 @@ const createUser = async (req, res) => {
         msg: "User with this phone number is already registered.",
       });
     }
-
     if (!email) {
       return res.status(400).send({
         status: false,
         msg: "Enter your email .Its mandatory for registration!!!",
       });
     }
-    if (!/^[a-z0-9_]{1,}@[a-z]{3,10}[.]{1}[a-z]{3}$/.test(email)) {
-      return res
-        .status(400)
-        .send({ status: false, msg: "Please Enter valid Email" });
+    if (!designation) {
+      return res.status(400).send({
+        status: false,
+        msg: "Enter your designation .Its mandatory for registration!!!",
+      });
     }
-
+    if (!isValidTitle(designation)) {
+      return res.status(400).send({
+        status: false,
+        message: "designation should be among Director,Manager and team_leader",
+      });
+    }
+    // if (isvalidEmail(email)) {
+    //   return res
+    //     .status(400)
+    //     .send({ status: false, msg: "Please Enter valid Email" });
+    // }
     let existEmail = await userModel.findOne({ email: email });
     if (existEmail) {
       return res.status(400).send({
@@ -68,17 +89,17 @@ const createUser = async (req, res) => {
         .send({ status: false, msg: "Please enter Password for registartion" });
     }
 
-    if (!/^[\s]*[0-9a-zA-Z@#$%^&*]{8,15}[\s]*$/.test(password)) {
+    if (isvalidPassword(password)) {
       return res.status(400).send({
         status: false,
         msg: "please Enter valid Password and it's length should be 8-15",
       });
     }
-
+    console.log("request Body", req.body);
     let savedData = await userModel.create(req.body);
     return res
       .status(201)
-      .send({ status: true, message: "Success", data: savedData });
+      .send({ status: true, message: "Created Successfully", data: savedData });
   } catch (err) {
     return res.status(500).send({ status: false, msg: err.message });
   }
@@ -123,4 +144,14 @@ const login = async (req, res) => {
   }
 };
 
-export {createUser,login}
+const getAllAdmins = async (req, res) => {
+  try {
+    let allData = await userModel.find();
+
+    return res.status(200).send({ data: allData, status: true });
+  } catch (error) {
+    return res.status(500).send({ data: error, status: false });
+  }
+};
+
+export { createUser, login, getAllAdmins };
